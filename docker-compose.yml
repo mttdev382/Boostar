@@ -1,0 +1,18 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+      - "19000:19000"  # Esponi la porta di Expo
+      - "19001:19001"  # Porta per il debugger di React Native
+      - "19002:19002"  # Porta per il proxy del pacchetto di sviluppo
+      - "19006:19006"  # Porta per il Metro bundler di React Native
+    volumes:
+      - .:/app  # Monta il codice sorgente all'interno del container
+    environment:
+      - NODE_ENV=development  # Imposta l'ambiente di sviluppo
+    stdin_open: true  # Abilita l'input da parte dell'utente
+    tty: true    
+    command: ["npm", "start"]  # Comando per avviare l'applicazione React Native
