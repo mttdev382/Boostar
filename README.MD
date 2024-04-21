@@ -17,7 +17,7 @@ Questo progetto utilizza React Native insieme a TypeScript per lo sviluppo di ap
 1. **Clona il repository:**
 
     ```bash
-    git clone <URL_DEL_REPOSITORY>
+    git clone https://github.com/mttdev382/Boostar.git
     ```
 
 2. **Installa le dipendenze:**
