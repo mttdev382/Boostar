@@ -1,3 +1,4 @@
+version: '3'
 services:
   app:
     build:
@@ -15,4 +16,4 @@ services:
       - NODE_ENV=development  # Imposta l'ambiente di sviluppo
     stdin_open: true  # Abilita l'input da parte dell'utente
     tty: true    
-    command: ["npm", "start"]  # Comando per avviare l'applicazione React Native
+    command: ["npm", "run", "start"]  # Comando per avviare l'applicazione React Native
