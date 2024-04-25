@@ -12,7 +12,7 @@ Questo progetto utilizza React Native insieme a TypeScript per lo sviluppo di ap
 - npm (o yarn)
 - Docker
 
-## Istruzioni
+## Istruzioni senza Docker
 
 1. **Clona il repository:**
 
@@ -26,7 +26,27 @@ Questo progetto utilizza React Native insieme a TypeScript per lo sviluppo di ap
     npm install
     ```
 
-3. **Esegui il container Docker:**
+3. **Avvia il frontend nella root principale:**
+    
+    ```bash
+    npm start
+    ```
+
+4. **Posizionati nella cartella /server:**
+    
+    ```bash
+    cd server
+    ```
+
+5. **Installa le dipendenze nella cartella /server:**
+    
+    ```bash
+    npm install
+    ```
+
+## Istruzioni con Docker
+
+1. **Esegui il container Docker:**
 
     Apri un terminale all'interno della root del progetto e lancia il comando:
 
@@ -34,11 +54,14 @@ Questo progetto utilizza React Native insieme a TypeScript per lo sviluppo di ap
     docker-compose up --build
     ```
 
-    Questo comando avvierà il container Docker e compilerà l'applicazione React Native all'interno dell'ambiente Docker.
+    Questo comando avvierà:
+    1. Il container Docker del frontend
+    2. Il container Docker del backend (/server) 
 
-4. **Inizia lo sviluppo:**
+## Login (username e password)
+1. test test
+2. admin admin
 
-    Ora sei pronto per iniziare lo sviluppo della tua applicazione React Native! Apri il tuo editor preferito e modifica il codice all'interno della directory `src`.
 
 ## Struttura del progetto
 - `server/`: Contiene un server di test in expressJS.
