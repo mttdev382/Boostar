@@ -1,6 +1,5 @@
-version: '3'
 services:
-  app:
+  frontend:
     build:
       context: .
       dockerfile: Dockerfile
@@ -13,16 +12,16 @@ services:
     volumes:
       - .:/app
     environment:
-      - NODE_ENV=development 
-    stdin_open: true 
+      - NODE_ENV=development
+    stdin_open: true
     tty: true
-    command: ["npm", "run", "start"]
+    command: [ "npm", "run", "start" ]
 
-  express_backend:
+  backend:
     build: ./server
     ports:
-      - "5000:5000"
+      - "3000:3000"
     environment:
       - NODE_ENV=production
     depends_on:
-      - app
+      - frontend
