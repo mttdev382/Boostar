@@ -6,75 +6,10 @@ const cors = require('cors');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
-const JWT_SECRET = 'mysecretkey';
+const path = require('path');
+const JWT_SECRET = 'mysecretkey'
 
-const users = [
-  { id: 1, username: 'admin', password: 'admin', firstName: "Admin", lastName: "Admin", email: "admin@admin.it", agent: "admin" },
-  { id: 2, username: 'test', password: 'test', firstName: "Test", lastName: "Test", email: "test@test.it", agent: "test" }
-];
-
-const customers = [
-  { id: 1, username: 'mariorossi', firstName: "Mario", lastName: "Rossi", email: "mario@rossi.it" },
-  { id: 2, username: 'mariorossi', firstName: "Mario", lastName: "Rossi", email: "mario@rossi.it" },
-  { id: 3, username: 'mariorossi', firstName: "Mario", lastName: "Rossi", email: "mario@rossi.it" },
-  { id: 4, username: 'mariorossi', firstName: "Mario", lastName: "Rossi", email: "mario@rossi.it" },
-]
-
-const attachments = [{
-  id: 1, userId: 1, name: "carta di identità", filename: "cartaidentita"
-}]
-
-const bookings = [{
-  id: 1,
-  structureId: 1,
-  ota: "booking",
-  customerId: 1,
-  from: new Date(),
-  to: new Date(),
-  amount: 100,
-  guests: 5
-},
-{
-  id: 2,
-  structureId: 1,
-  ota: "booking",
-  customerId: 2,
-  from: new Date(),
-  to: new Date(),
-  amount: 100,
-  guests: 5
-},
-{
-  id: 3,
-  structureId: 1,
-  ota: "booking",
-  customerId: 3,
-  from: new Date(),
-  to: new Date(),
-  amount: 100,
-  guests: 5
-},
-{
-  id: 4,
-  structureId: 1,
-  ota: "booking",
-  customerId: 4,
-  from: new Date(),
-  to: new Date(),
-  amount: 100,
-  guests: 5
-}]
-
-const structures = [
-  { id: 1, userId: 1, imageUrl: "", name: "Residenza degli Admin", address: "Via Melo 13, 70128, Bari", fromDate: new Date() },
-  { id: 2, userId: 1, imageUrl: "", name: "Corte Amministrativa", address: "Via Admin 15, 70128, Bari", fromDate: new Date() },
-  { id: 3, userId: 1, imageUrl: "", name: "Villa Augusta", address: "Via delle Vie 1, 70128, Bari", fromDate: new Date() },
-
-  { id: 4, userId: 2, imageUrl: "", name: "Residenza Test", address: "Via Nazionale 1, 70128, Bari", fromDate: new Date() },
-  { id: 5, userId: 2, imageUrl: "", name: "Corte di Testing", address: "Via Regionale 2, 70128, Bari", fromDate: new Date() },
-  { id: 6, userId: 2, imageUrl: "", name: "Villa Testarda", address: "Contrada del Granduca 5, 70128, Bari", fromDate: new Date() },
-]
-
+const { agents, attachments, bookings, customers, otas, structures, users, balanceData } = require('./data');
 
 // ENDPOINTS
 
@@ -90,24 +25,181 @@ app.post('/api/login', (req, res) => {
   return res.json({ message: 'Login successful', token });
 });
 
+
+
 app.get('/api/home-data', verifyToken, (req, res) => {
-  let currentUser = users.find(user => user.id === req.user.id);
-  console.log(currentUser)
-  const data = {
-    occupancy: currentUser.occupancy,
-    monthlyRevenue: currentUser.monthlyRevenue
-  }
+  let userStructures = structures.filter(structure => structure.userId == req.user.id);
+
+  // Inizializza gli accumulatori per i dati totali
+  let totalMonthlyRevenue = 0;
+  let totalYearlyRevenue = 0;
+  let totalFutureBookingsRevenue = 0;
+
+  // Itera su tutte le strutture dell'utente
+  userStructures.forEach(selectedStructure => {
+    // Trova le prenotazioni per la struttura selezionata
+    let structureBookings = bookings.filter(booking => booking.structureId == selectedStructure.id);
+
+    // Calcola il fatturato mensile per questa struttura
+    let currentDate = new Date();
+    let currentMonth = currentDate.getMonth() + 1;
+    let currentYear = currentDate.getFullYear();
+    let monthlyRevenue = structureBookings.reduce((total, booking) => {
+      let bookingDate = new Date(booking.from);
+      if (bookingDate.getMonth() + 1 === currentMonth && bookingDate.getFullYear() === currentYear) {
+        return total + booking.amount;
+      } else {
+        return total;
+      }
+    }, 0);
+    totalMonthlyRevenue += monthlyRevenue;
+
+    // Calcola il fatturato annuale per questa struttura
+    let yearlyRevenue = structureBookings.reduce((total, booking) => {
+      let bookingDate = new Date(booking.from);
+      if (bookingDate.getFullYear() === currentYear) {
+        return total + booking.amount;
+      } else {
+        return total;
+      }
+    }, 0);
+    totalYearlyRevenue += yearlyRevenue;
+
+    // Calcola il fatturato delle prenotazioni future per questa struttura
+    let futureBookingsRevenue = structureBookings.filter(booking => {
+      let bookingDate = new Date(booking.from);
+      return bookingDate > currentDate;
+    }).reduce((total, booking) => {
+      return total + booking.amount;
+    }, 0);
+    totalFutureBookingsRevenue += futureBookingsRevenue;
+  });
+
+
+
+  // Invia i dati al client
+  res.json({
+    occupancyRate: (Math.random() * 100).toFixed(2),
+    monthlyRevenue: totalMonthlyRevenue.toFixed(2),
+    yearlyRevenue: totalYearlyRevenue.toFixed(2),
+    futureBookingsRevenue: totalFutureBookingsRevenue.toFixed(2)
+  });
+});
+
+
+
+app.get("/api/home-data/:structureId", verifyToken, (req, res) => {
+  // Trova la struttura selezionata dall'utente
+  let userStructures = structures.filter(structure => structure.userId == req.user.id);
+  let selectedStructure = userStructures.find(structure => structure.id == req.params.structureId);
+
+  // Trova le prenotazioni per la struttura selezionata
+  let structureBookings = bookings.filter(booking => booking.structureId == selectedStructure.id);
+
+  // Calcola il fatturato del mese corrente
+  let currentDate = new Date();
+  let currentMonth = currentDate.getMonth() + 1;
+  let currentYear = currentDate.getFullYear();
+  let monthlyRevenue = structureBookings.reduce((total, booking) => {
+    let bookingDate = new Date(booking.from);
+    if (bookingDate.getMonth() + 1 === currentMonth && bookingDate.getFullYear() === currentYear) {
+      return total + booking.amount;
+    } else {
+      return total;
+    }
+  }, 0);
+
+  // Calcola il fatturato da inizio anno
+  let yearlyRevenue = structureBookings.reduce((total, booking) => {
+    let bookingDate = new Date(booking.from);
+    if (bookingDate.getFullYear() === currentYear) {
+      return total + booking.amount;
+    } else {
+      return total;
+    }
+  }, 0);
+
+  // Calcola il fatturato delle prenotazioni future
+  let futureBookingsRevenue = structureBookings.filter(booking => {
+    let bookingDate = new Date(booking.from);
+    return bookingDate > currentDate;
+  }).reduce((total, booking) => {
+    return total + booking.amount;
+  }, 0);
+
+  // Invia i dati al client
+  res.json({
+    occupancyRate: (Math.random() * 100).toFixed(2),
+    monthlyRevenue: monthlyRevenue.toFixed(2),
+    yearlyRevenue: yearlyRevenue.toFixed(2),
+    futureBookingsRevenue: futureBookingsRevenue.toFixed(2)
+  });
+});
+
+
+
+app.get('/api/profile-data', verifyToken, (req, res) => {
+  let data = {};
+  data["user"] = users.find(user => user.id === req.user.id);
+  data["agent"] = agents.find(agent => agent.id === req.user.agentId);
+  data["attachments"] = attachments.filter(att => att.userId === req.user.id);
+
   return res.status(200).json(data);
 });
 
-app.get('/download/:filename', (req, res) => {
-  const filename = req.params.filename;
-  const filePath = path.join(__dirname, 'attachments', filename);
+app.get('/api/structures-data', verifyToken, (req, res) => {
+  let data = {};
+  data["user"] = users.find(user => user.id === req.user.id);
+  data["structures"] = structures.filter(structure => structure.userId === req.user.id);
+  return res.status(200).json(data);
+});
 
+app.get('/api/bookings-data', verifyToken, (req, res) => {
+  let userStructures = structures.filter(structure => structure.userId == req.user.id);
+  let userBookings = [];
+
+  userStructures.forEach(structure => {
+    userBookings.push(...bookings.filter(booking => booking.structureId == structure.id));
+  })
+
+  userBookings = userBookings.map(userBooking => {
+    return { ...userBooking, ota: otas.find(ota => ota.id == userBooking.otaId), customer: customers.find(customer => customer.id == userBooking.customerId), structure: structures.find(structure => structure.id == userBooking.structureId) }
+  })
+
+  return res.status(200).json(userBookings);
+});
+
+app.get('/api/balance-data', verifyToken, (req, res) => {
+  let data = {};
+  data["balance"] = balanceData;
+  data["user"] = req.user;
+  return res.status(200).json(data);
+});
+
+
+
+
+
+app.get('/api/check-token', verifyToken, (req, res) => {
+  if (req.user) return res.status(200).json({ isValid: true })
+  else return res.status(200).json({ isValid: false });
+});
+
+app.get('/download/:attachmentId', verifyToken, (req, res) => {
+  const { attachmentId } = req.params;
+  let attachment = attachments.find(att => att.id == attachmentId);
+  console.log("attachment: ", attachment);
+  if (!attachment) return res.status(404).send("Allegato non trovato");
+
+  if (attachment.userId != req.user.id) {
+    return res.status(404).send("Allegato non appartenente all'utente corrente.");
+  }
+
+  const filePath = path.join(__dirname, 'attachments', attachment.filename);
   return res.download(filePath, (err) => {
     if (err) {
       // Gestisci eventuali errori
-      res.status(404).send("File non trovato");
+      return res.status(500).send(err);
     }
   });
 });

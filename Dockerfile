@@ -1,8 +1,7 @@
 # Usa un'immagine Node.js come base
 FROM node:latest
-# Installa le dipendenze necessarie per lo sviluppo React Native
-RUN node -v
 
+# Installa le dipendenze necessarie per lo sviluppo React Native
 RUN apt-get update && apt-get install -y \
     bash \
     git \
