@@ -39,7 +39,8 @@
   "devDependencies": {
     "@babel/core": "^7.24.4",
     "@types/react": "^18.2.79",
-    "@types/react-native": "^0.73.0"
+    "@types/react-native": "^0.73.0",
+    "@types/react-native-svg-charts": "^5.0.16"
   },
   "private": true
 }

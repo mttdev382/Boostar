@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
-import { NavigationProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { removeTokenFromStorage } from '../../shared/user-storage/UserStorage';
 import { BaseScreenProps } from '../../interfaces/interfaces';
 

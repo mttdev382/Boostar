@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator } from 'react-native';
-import * as Http from '../../shared/http-handler/http-handler';
-import { getTokenFromStorage } from '../../shared/user-storage/UserStorage';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { BaseScreenProps, Booking } from '../../interfaces/interfaces';
 import { getBookingData } from '../../services/api-service';
 

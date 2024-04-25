@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ImageBackground, View, ActivityIndicator, StyleSheet, Dimensions } from 'react-native';
 import { BaseScreenProps } from '../../interfaces/interfaces';
 
-const SplashScreen: React.FC<BaseScreenProps> = ({ navigation }) => {
+const SplashScreen: React.FC<BaseScreenProps> = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {

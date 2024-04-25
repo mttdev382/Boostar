@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, Pressable } from 'react-native';
-import { saveTokenIntoStorage, removeTokenFromStorage, getTokenFromStorage, checkTokenValidity } from "../../shared/user-storage/UserStorage";
-import * as Http from '../../shared/http-handler/http-handler'
-import { StackNavigationProp } from '@react-navigation/stack';
+import { removeTokenFromStorage, getTokenFromStorage, checkTokenValidity } from "../../shared/user-storage/UserStorage";
+
 import { login } from '../../services/api-service';
 import { BaseScreenProps } from '../../interfaces/interfaces';
 

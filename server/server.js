@@ -170,10 +170,10 @@ app.get('/api/bookings-data', verifyToken, (req, res) => {
 });
 
 app.get('/api/balance-data', verifyToken, (req, res) => {
-  let data = {};
-  data["balance"] = balanceData;
-  data["user"] = req.user;
-  return res.status(200).json(data);
+  // let data = {};
+  // data["balance"] = balanceData;
+  // data["user"] = req.user;
+  return res.status(200).json(balanceData);
 });
 
 

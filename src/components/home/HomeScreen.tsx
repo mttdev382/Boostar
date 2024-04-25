@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, ScrollView } from 'react-native';
+import { Text, StyleSheet, ScrollView, View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { getTokenFromStorage } from '../../shared/user-storage/UserStorage';
-import * as Http from '../../shared/http-handler/http-handler';
 import { BaseScreenProps, HomeData, Structure } from '../../interfaces/interfaces';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { getHomeData, getStructuresData } from "../../services/api-service";
 
 const HomeScreen: React.FC<BaseScreenProps> = ({ navigation }) => {
@@ -78,6 +75,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+  chartContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  chart: {
+    height: 200,
+    width: 200,
   },
 });
 

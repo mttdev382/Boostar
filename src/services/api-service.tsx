@@ -55,7 +55,7 @@ export const getHomeData = async (navigation: StackNavigationProp<any>, selected
 export const getBookingData = async (navigation: StackNavigationProp<any>): Promise<Booking[]> => {
     try {
         const token = await getTokenFromStorage() ?? ''; // Fallback a una stringa vuota se il token è null
-        const response = await Http.fetchUrl("http://localhost:3000/bookings-data", generateDefaultGetOptions(token), navigation);
+        const response = await Http.fetchUrl("http://localhost:3000/api/bookings-data", generateDefaultGetOptions(token), navigation);
         if (!response.ok) {
             throw new Error('Errore durante il recupero dei dati');
         }
@@ -70,7 +70,7 @@ export const getBookingData = async (navigation: StackNavigationProp<any>): Prom
 export const getBalanceData = async (navigation: StackNavigationProp<any>): Promise<BalanceItem[]> => {
     try {
         const token = await getTokenFromStorage() ?? ''; // Fallback a una stringa vuota se il token è null
-        const response = await Http.fetchUrl("http://localhost:3000/balance-data", generateDefaultGetOptions(token), navigation);
+        const response = await Http.fetchUrl("http://localhost:3000/api/balance-data", generateDefaultGetOptions(token), navigation);
         if (!response.ok) {
             throw new Error('Errore durante il recupero dei dati');
         }

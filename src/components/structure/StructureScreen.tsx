@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, ImageSourcePropType } from 'react-native';
-import { getTokenFromStorage } from '../../shared/user-storage/UserStorage';
-import * as Http from '../../shared/http-handler/http-handler'
 import { getStructuresData } from '../../services/api-service';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { BaseScreenProps, Structure, StructuresDataResponse, User } from '../../interfaces/interfaces';
 
 const StructureScreen: React.FC<BaseScreenProps> = ({ navigation }) => {

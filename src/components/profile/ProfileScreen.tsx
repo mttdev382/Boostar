@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Linking, Touchable, Pressable } from 'react-native';
-import { getTokenFromStorage } from '../../shared/user-storage/UserStorage';
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import { BaseScreenProps, ProfileData } from '../../interfaces/interfaces';
-import { StackNavigationProp } from '@react-navigation/stack';
-import * as Http from "../../shared/http-handler/http-handler"
 import { getProfileData } from '../../services/api-service';
 
 const ProfileScreen: React.FC<BaseScreenProps> = ({ navigation }) => {
