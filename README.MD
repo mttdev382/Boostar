@@ -41,13 +41,10 @@ Questo progetto utilizza React Native insieme a TypeScript per lo sviluppo di ap
     Ora sei pronto per iniziare lo sviluppo della tua applicazione React Native! Apri il tuo editor preferito e modifica il codice all'interno della directory `src`.
 
 ## Struttura del progetto
-
+- `server/`: Contiene un server di test in expressJS.
 - `src/`: Contiene il codice sorgente dell'applicazione React Native.
 - `docker-compose.yml`: Il file di configurazione per Docker Compose.
 
-## Contributi
-
-Sono benvenuti contributi e suggerimenti per migliorare questo progetto! Se hai trovato un bug o hai una richiesta di funzionalità, non esitare a creare una nuova issue o a inviare una pull request.
 
 ## Licenza
 
