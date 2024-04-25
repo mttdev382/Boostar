@@ -23,6 +23,13 @@ RUN npm install
 # Copia il codice sorgente dell'applicazione nella directory di lavoro
 COPY . .
 
+
+WORKDIR /app/server
+
+RUN npm install
+
+WORKDIR /app
+
 # Esponi le porte necessarie per Expo e Metro Bundler
 EXPOSE 19000
 EXPOSE 19001
@@ -33,5 +40,7 @@ EXPOSE 8081
 # Avvia l'applicazione React Native
 # CMD ["npm", "start"]
 
+CMD npm run dev & \
+cd server && node server.js
 # Esegui un comando personalizzato all'avvio del container
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
